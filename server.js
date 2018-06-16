@@ -13,15 +13,22 @@ server.use(sassMiddleware({
 
 server.set('view engine', 'ejs');
 
+import serverRender from './serverRender';
+
 server.get('/', (request, response) => {
-  response.render('index', {
-    content: 'Hello Express and <em>EJS</em>!'
-  });
+  serverRender()
+    .then(({ initialMarkup, initialData }) => {
+      response.render('index', {
+        initialMarkup,
+        initialData
+      });
+    })
+    .catch(console.error);
 });
 
 server.use('/api', apiRouter);
 server.use(express.static('public'));
 
-server.listen(config.port, () => {
-  console.log(`Server is running on port ${config.port}...`);
+server.listen(config.port, config.host, () => {
+  console.info(`Server is running on port ${config.port}...`);
 });

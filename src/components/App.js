@@ -1,25 +1,18 @@
 import React from 'react';
-import axios from 'axios';
+import PropTypes from 'prop-types';
 import Header from './Header';
-import ContestPreview from './ContestPreview';
+import ContestList from './ContestList';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       pageHeader: 'Naming Contests',
-      contests: []
+      contests: props.initialContests
     };
   }
 
   componentDidMount() {
-    axios.get('/api/contests')
-      .then(response => {
-        this.setState({
-          contests: response.data.contests
-        });
-      })
-      .catch(console.error);
   }
 
   componentWillUnmount() {
@@ -29,14 +22,14 @@ class App extends React.Component {
     return (
       <div className="App">
         <Header message={ this.state.pageHeader } />
-        <div>
-          { this.state.contests.map(contest =>
-            <ContestPreview key={ contest.id } { ...contest } />
-          ) }
-        </div>
+        <ContestList contests={ this.state.contests } />
       </div>
     );
   }
 }
+
+App.propTypes = {
+  initialContests: PropTypes.array
+};
 
 export default App;
