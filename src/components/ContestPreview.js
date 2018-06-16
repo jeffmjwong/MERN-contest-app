@@ -7,12 +7,14 @@ class ContestPreview extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.state = {
       categoryName: props.categoryName,
-      contestName: props.contestName
+      contestName: props.contestName,
+      contestId: props.id,
+      onClick: props.onClick
     };
   }
 
   handleClick() {
-    console.log(this.state.contestName);
+    this.state.onClick(this.state.contestId);
   }
 
   render() {
@@ -31,7 +33,9 @@ class ContestPreview extends Component {
 
 ContestPreview.propTypes = {
   categoryName: PropTypes.string.isRequired,
-  contestName: PropTypes.string.isRequired
+  contestName: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
 export default ContestPreview;
