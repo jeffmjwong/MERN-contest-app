@@ -5,21 +5,21 @@ class Contest extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      contestId: props.id
+      description: props.description
     };
   }
 
   render() {
     return (
       <div className="Contest">
-        { this.state.contestId }
+        { this.state.description }
       </div>
     );
   }
 }
 
 Contest.propTypes = {
-  id: PropTypes.number.isRequired
+  description: PropTypes.string.isRequired
 };
 
 export default Contest;

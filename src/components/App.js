@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Header from './Header';
 import ContestList from './ContestList';
 import Contest from './Contest';
+import * as api from '../api';
 
 const pushState = (obj, url) =>
   window.history.pushState(obj, '', url);
@@ -11,11 +12,10 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.fetchContest = this.fetchContest.bind(this);
+    this.currentContest = this.currentContest.bind(this);
+    this.pageHeader = this.pageHeader.bind(this);
     this.currentContent = this.currentContent.bind(this);
-    this.state = {
-      pageHeader: 'Naming Contests',
-      contests: props.initialContests
-    };
+    this.state = props.initialData;
   }
 
   componentDidMount() {
@@ -29,17 +29,34 @@ class App extends React.Component {
       { currentContestId: contestId },
       `/contest/${contestId}`
     );
-    // look up the contest
-    // this.state.contests[contestId]
-    this.setState({
-      pageHeader: this.state.contests[contestId].contestName,
-      currentContestId: contestId
-    });
+    api.fetchContest(contestId)
+      .then(contest => {
+        this.setState({
+          currentContestId: contest.id,
+          contests: {
+            ...this.state.contests,
+            [contest.id]: contest
+          }
+        });
+      })
+      .catch(console.error);
+  }
+
+  currentContest() {
+    return this.state.contests[this.state.currentContestId];
+  }
+
+  pageHeader() {
+    if (this.state.currentContestId) {
+      return this.currentContest().contestName;
+    } else {
+      return 'Naming Contests';
+    }
   }
 
   currentContent() {
     if (this.state.currentContestId) {
-      return <Contest { ...this.state.contests[this.state.currentContestId] } />;
+      return <Contest { ...this.currentContest() } />;
     } else {
       return (
         <ContestList
@@ -52,7 +69,7 @@ class App extends React.Component {
   render () {
     return (
       <div className="App">
-        <Header message={ this.state.pageHeader } />
+        <Header message={ this.pageHeader() } />
         { this.currentContent() }
       </div>
     );
@@ -60,7 +77,7 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  initialContests: PropTypes.object
+  initialData: PropTypes.object.isRequired
 };
 
 export default App;
