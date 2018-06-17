@@ -6,3 +6,10 @@ export const fetchContest = contestId => {
       return response.data;
     });
 };
+
+export const fetchContestList = () => {
+  return axios.get('/api/contests')
+    .then(response => {
+      return response.data.contests;
+    });
+};

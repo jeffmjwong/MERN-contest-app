@@ -5,21 +5,30 @@ class Contest extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      description: props.description
+      description: props.description,
+      contestListClick: props.contestListClick
     };
   }
 
   render() {
     return (
       <div className="Contest">
-        { this.state.description }
+        <div className="contest-description">
+          { this.state.description }
+        </div>
+        <div
+          className="link home-link"
+          onClick={ this.state.contestListClick }>
+          Contest List
+        </div>
       </div>
     );
   }
 }
 
 Contest.propTypes = {
-  description: PropTypes.string.isRequired
+  description: PropTypes.string.isRequired,
+  contestListClick: PropTypes.func.isRequired
 };
 
 export default Contest;
