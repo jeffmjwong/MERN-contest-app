@@ -1,23 +1,43 @@
 import express from 'express';
-import data from '../src/testData';
+import { MongoClient } from 'mongodb';
+import assert from 'assert';
+import config from '../config';
 
 const router = express.Router();
 
-const contests = data.contests.reduce((obj, contest) => {
-  obj[contest.id] = contest;
-  return obj;
-}, {});
+let mdb;
+MongoClient.connect(config.mongodbUri, (error, client) => {
+  assert.equal(null, error);
+
+  const db = client.db(config.database);
+  mdb = db;
+});
 
 router.get('/contests', (request, response) => {
-  response.send({
-    contests: contests
-  });
+  let contests = {};
+  mdb.collection('contests')
+    .find({})
+    .project({
+      id: 1,
+      categoryName: 1,
+      contestName: 1
+    })
+    .each((error, contest) => {
+      assert.equal(null, error);
+
+      if (!contest) { // no more contests
+        response.send({ contests });
+        return;
+      }
+      contests[contest.id] = contest;
+    });
 });
 
 router.get('/contests/:contestId', (request, response) => {
-  let contest = contests[request.params.contestId];
-  contest.description = 'lorem ipsum lol kwkwkwk llloooooo';
-  response.send(contest);
+  mdb.collection('contests')
+    .findOne({ id: Number(request.params.contestId) })
+    .then(contest => response.send(contest))
+    .catch(console.error);
 });
 
 export default router;

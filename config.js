@@ -9,6 +9,8 @@ export const logStars = message => {
 };
 
 export default {
+  mongodbUri: 'mongodb://localhost:27017/test',
+  database: 'test',
   port: env.PORT || 4321,
   host: env.HOST || '0.0.0.0',
   get serverUrl() {
