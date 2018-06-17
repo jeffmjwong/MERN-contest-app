@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 class ContestPreview extends Component {
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
+    // this.handleClick = this.handleClick.bind(this);
     this.state = {
       categoryName: props.categoryName,
       contestName: props.contestName,
@@ -13,13 +13,13 @@ class ContestPreview extends Component {
     };
   }
 
-  handleClick() {
-    this.state.onClick(this.state.contestId);
-  }
+  // handleClick() {
+  //   this.state.onClick(this.state.contestId);
+  // }
 
   render() {
     return (
-      <div className="link ContestPreview" onClick={ this.handleClick }>
+      <div className="link ContestPreview" onClick={ () => this.state.onClick(this.state.contestId) }>
         <div className="category-name">
           { this.state.categoryName }
         </div>
